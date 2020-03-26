@@ -50,9 +50,11 @@
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
 
-                o.uvGrab.xy = (float2(o.vertex.x , -o.vertex.y) + o.vertex.w) * 0.5;
-                o.uvGrab.zw = o.vertex.zw;
+                //o.uvGrab.xy = (float2(o.vertex.x , -o.vertex.y) + o.vertex.w) * 0.5;
+                //o.uvGrab.zw = o.vertex.zw;
     
+                o.uvGrab = ComputeScreenPos(o.vertex);
+                
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 o.uvBump = TRANSFORM_TEX(v.uv, _BumpMap);
                 
@@ -64,9 +66,9 @@
                 // valor de distorçao do bump 
                 half2 bumpValue = UnpackNormal(tex2D(_BumpMap,i.uvBump)).rg;
 
-                _GrabTexture_TexelSize.y = _GrabTexture_TexelSize <0 ? 1- _GrabTexture_TexelSize.y : _GrabTexture_TexelSize.y;
+                //_GrabTexture_TexelSize.y = _GrabTexture_TexelSize <0 ? 1- _GrabTexture_TexelSize.y : _GrabTexture_TexelSize.y;
 
-                float2 offset = bumpValue * _ScaleUV * _GrabTexture_TexelSize;          
+                float2 offset = bumpValue * _ScaleUV;          
 
                 i.uvGrab.xy = offset * i.uvGrab.z + i.uvGrab.xy;
 

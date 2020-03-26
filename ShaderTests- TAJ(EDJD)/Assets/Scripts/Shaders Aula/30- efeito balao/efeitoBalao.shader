@@ -13,17 +13,13 @@
  
         #pragma surface surf Lambert  vertex:vert
 
-        sampler2D _MainTex;
-        fixed4 _Color;
-
-        half _InflateAmout;
         
         struct appdata{
 
             float4 vertex : POSITION;  // valores da posiçao
             float3 normal : NORMAL;   // valor das normais
 
-            float4 texcoord : TEXCOORD1;
+            float4 texcoord : TEXCOORD0;
         };
     
         struct Input
@@ -32,6 +28,11 @@
             float2 uv_MainTex;            
         };
         
+        sampler2D _MainTex;
+        fixed4 _Color;
+
+        half _InflateAmout;
+
         void vert (inout appdata v)
         {
             v.vertex.xy += v.normal * sin(_Time * 10) * _InflateAmout;

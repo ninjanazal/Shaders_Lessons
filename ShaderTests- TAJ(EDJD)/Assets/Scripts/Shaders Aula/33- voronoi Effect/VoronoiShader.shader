@@ -30,14 +30,16 @@
             {
                 float4 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
-                float2 vor : TEXCOORD1;
             };
+
             // variaveis
             fixed4 _BaseColor;
             fixed _AngleOff, _CellDensity,_Amount;
 
             sampler2D _GrabTexture;
 
+
+            // psedoRandom
             inline float2 unity_voronoi_noise_randomVector (float2 UV, float offset)
             {
                 float2x2 m = float2x2(15.27, 47.63, 99.41, 89.98);
@@ -72,27 +74,27 @@
 
 
 
-
+            
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = ComputeGrabScreenPos(o.vertex);
-                float2 voronoiOut = (0,0);
                 
-                Unity_Voronoi_float(o.uv.xy, _AngleOff, _CellDensity, voronoiOut.x,voronoiOut.y);
-
-                //o.uv.xy += lerp(0,o.uv.xy* voronoiOut.xy,_Amount);
-                o.uv *= voronoiOut.y;
-                o.vor = voronoiOut;
+                //o.uv = float4(v.uv,0,1);
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = _BaseColor;
-                fixed4 grabColor = tex2Dproj(_GrabTexture, UNITY_PROJ_COORD(i.uv));
-                return col * grabColor * i.vor.y;
+                float4 voronoiDisplace = float4(0,0,0,0);
+
+                Unity_Voronoi_float(i.uv.xy, _AngleOff * _SinTime.y, _CellDensity, voronoiDisplace.x,voronoiDisplace.y);                
+                
+                fixed4 grabColor = tex2Dproj(_GrabTexture, UNITY_PROJ_COORD(i.uv + (voronoiDisplace.x * _Amount)));
+                return col % grabColor.x;
+                //return voronoiDisplace.x;
             }
             ENDCG
         }
