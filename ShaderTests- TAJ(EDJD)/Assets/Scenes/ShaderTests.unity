@@ -1830,6 +1830,7 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
+  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1877,7 +1878,7 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingPath: -1
+  m_RenderingPath: 3
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
@@ -1895,13 +1896,28 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.15178265, y: 0.7235241, z: -0.16788657, w: 0.65214187}
-  m_LocalPosition: {x: 4.698139, y: 3.1894078, z: -1.0651073}
+  m_LocalRotation: {x: -0.07176129, y: -0.7170514, z: 0.07474933, w: -0.6892751}
+  m_LocalPosition: {x: -28.273075, y: 10.593647, z: 3.9010172}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2108467521}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 8.94, y: 83.29, z: 0}
+--- !u!114 &963194229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96c50a787cdf3ad4ba950b17cb49bc67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fromTOMat: {fileID: 2100000, guid: 192985ff1f57cdd4c8b5018efe7c5a11, type: 2}
+  InvetColorMat: {fileID: 0}
+  range: 0
 --- !u!1001 &987341300
 PrefabInstance:
   m_ObjectHideFlags: 0
