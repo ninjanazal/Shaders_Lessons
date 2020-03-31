@@ -32,5 +32,7 @@ public class BlipAction : MonoBehaviour
         }
         else
             Graphics.Blit(source, destination);
+
+        RenderTexture.ReleaseTemporary(temp);
     }
 }
