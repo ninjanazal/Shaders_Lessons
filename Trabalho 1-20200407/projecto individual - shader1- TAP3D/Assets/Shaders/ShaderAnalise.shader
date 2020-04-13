@@ -4,92 +4,86 @@
 
     	Properties
 	{
-		_Sura ("sura", 2D) = "white" {}
-		_Sura2 ("sura", 2D) = "white" {}
+		_BaseAlbedo ("Textura de Cor", 2D) = "white" {}	// textura de cor
 
-		[Toggle]
-		_A("A", Range(0,1)) = 1
-		[Toggle]
-		_B("B", Range(0,1)) = 1
-		[Toggle]
-		_C("C", Range(0,1)) = 1
-
-		[Toggle]
-		_D("D", Range(0,1)) = 1
-
+		[Toggle]_NormXPlus("Normal x+", Range(0,1)) = 1		// valor de toggle para x+
+		[Toggle]_NormalXMinus("Normal x-", Range(0,1)) = 1	// valor de toggle para x-
+		[Toggle]_NormalYPlus("Normal y+", Range(0,1)) = 1	// valor de toggle para y+
+		[Toggle]_InvertColor("Inverte cor", Range(0,1)) = 1	// toggle de inversao da cor
+		
+		_ClipValue("Valor de clip", Range(0,1)) = 0.5	// valor de clip
 	}
 
 	SubShader
 	{	
 	
-		Cull Off
-		Tags { "RenderType"="Opaque" }
+		Cull Off	// desativa o culling de faces, mostra todas as faces voltadas ou nao
+		Tags { "RenderType"="Opaque" }	// tipo de render
 
 	
 		Pass
 		{
 			CGPROGRAM
-			#pragma vertex ara
-			#pragma fragment oro
+			#pragma vertex vert	// definiçao da funçao de vertex
+			#pragma fragment frag	// definiçao da funçao do fragmet
 			
 			#include "UnityCG.cginc"
 
-			struct a
+			// estrutura de entrada
+			struct appdata
 			{
-				float4 p : POSITION;
-				float3 n : NORMAL;
-				float2 u : TEXCOORD0;
+				half4 pos : POSITION;	// posiçoes de vertice do obj
+				half3 normal : NORMAL;	// valor da normal no obj
+				half2 uv : TEXCOORD0;	// coordenadas de uvs
 			};
 
-			struct b
+			// estrutura de transiçao, vertex 2 fragmet
+			struct v2f
 			{
-				float4 p : SV_POSITION;
-				float2 n : NORMAL;
-				float2 u : TEXCOORD0;
+				float4 pos : SV_POSITION;	// posiçoes projectadas em clip
+				half3 normal : NORMAL;		// valor de normal no obj
+				half2 uv : TEXCOORD0;		// coordenadas de uvs
 			};
 
-			sampler2D _Sura;
-			sampler2D _Sura2;
-	
+			sampler2D _BaseAlbedo;			// textura de cor 
+			half4 _BaseAlbedo_ST;			// para tilling
 
-			float _A;
-			float _B;
-			float _C;
-			float _D;
-
-			b ara (a i)
+			fixed _NormXPlus;				// valor do toggle de normais em x+
+			fixed _NormalXMinus;			// valor de toggle de normais em x-
+			fixed _NormalYPlus;				// valor de toggle de normais em y+
+			fixed _InvertColor;				// valor de toggle para inverter a cor
+			
+			fixed _ClipValue;				// valor de clip
+			// vertex shader
+			v2f vert (appdata i)
 			{
-				b o;
-				o.p = UnityObjectToClipPos(i.p);
-				o.u = i.u;
-				o.n = i.n;
-				return o;
+				v2f o;		// definiçao da estrutura de saida	
+				o.pos = UnityObjectToClipPos(i.pos);	// transformaçao da posiçao em valores de clip
+				o.uv = TRANSFORM_TEX(i.uv, _BaseAlbedo) ;	// passa as uvs de entrada para a estrutura
+				o.normal = i.normal;	// passa as normais de entrada para a estrutura
+				return o;			// retorna a estrutura
 			}
 			
-			float4 oro(b i) : COLOR
+			// fragment shader
+			float4 frag(v2f i) : COLOR
 			{
-				float4 c = tex2D(_Sura, i.u);
-				float4 d = tex2D(_Sura2, i.u);
-
-				c =		_A == 1 ? c*  i.n.x : 
-						_B == 1 ? c*  -i.n.x : 
-						_C == 1 ? c*  i.n.y : 
-						c;
-
-
-				c.x = _D == 1 ? 1-c.x : c.x; 
-				c.y = _D == 1 ? 1-c.y : c.y; 
-				c.z = _D == 1 ? 1-c.z : c.z; 
-
-				if(c.x > 0.5 && c.y > 0.5 && c.z > 0.5 )
-				{
-					clip(-1);
-				}
-				else
-				{
-					c = tex2D(_Sura, i.u);
-				}
+				float4 c = tex2D(_BaseAlbedo, i.uv);	// guarda valor da cor na imagem de acordo com uvs
 				
+				// definiçao sobre avaliaçao ternaira para a determinaçao do valor de cor de acordo com toggles
+				half4 res = c *(_NormXPlus ? i.normal.x : 
+								_NormalXMinus ? -i.normal.x : 
+								_NormalYPlus ? i.normal.y :
+								 1);
+				
+				// inverte o valor de cada componente segundo o valor do toggle de inversao
+				res = _InvertColor ? 1-res : res; 
+				
+				// condiçao que determina se o fragmento é discartado ou nao
+				// caso todas as componentes sejam maiores que 0.5 discatar
+				if(res.x > _ClipValue && res.y > _ClipValue && res.z > _ClipValue )
+				{clip(-1);}
+				
+				// retorna a cor
 				return c;
 			}
 			ENDCG

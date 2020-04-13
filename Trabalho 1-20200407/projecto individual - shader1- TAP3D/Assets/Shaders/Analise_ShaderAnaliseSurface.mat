@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mat_ShaderAnalise_3
-  m_Shader: {fileID: 4800000, guid: e9e99b7ea02760345a0c254706a3430c, type: 3}
-  m_ShaderKeywords: _C_ON _D_ON _INVERTCOLOR_ON _NORMALXMINUS_ON
+  m_Name: Analise_ShaderAnaliseSurface
+  m_Shader: {fileID: 4800000, guid: 3053c1840e28f7c4389b563f33a7fce2, type: 3}
+  m_ShaderKeywords: _INVERTCOLOR_ON _NORMALXMINUS_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -22,23 +22,18 @@ Material:
     - _BaseAlbedo:
         m_Texture: {fileID: 2800000, guid: d795c7df794113042836d56974322a6a, type: 3}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 1, y: 1}
-    - _Sura:
-        m_Texture: {fileID: 2800000, guid: e9442880245d72e47a19d0e59292c657, type: 3}
-        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Sura2:
-        m_Texture: {fileID: 2800000, guid: d795c7df794113042836d56974322a6a, type: 3}
+    - _MainTex:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _A: 0
-    - _B: 0
-    - _C: 1
     - _ClipValue: 1
-    - _D: 1
+    - _Glossiness: 0.5
     - _InvertColor: 1
+    - _Metallic: 0
     - _NormXPlus: 0
     - _NormalXMinus: 1
     - _NormalYPlus: 0
-    m_Colors: []
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
