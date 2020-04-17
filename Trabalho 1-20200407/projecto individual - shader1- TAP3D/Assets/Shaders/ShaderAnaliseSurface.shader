@@ -16,7 +16,7 @@
     {
         Cull Off
         Tags { "RenderType"="Opaque" }
-
+        
         CGPROGRAM
         #pragma surface surf Unlit noforwardadd
         #pragma target 3.0
@@ -67,6 +67,44 @@
             o.Albedo = c.rgb;
         }
         ENDCG
+
+                // segundo Pass
+        CGPROGRAM
+        #pragma surface surf Unlit noforwardadd vertex:vert
+        #pragma target 3.0
+
+
+        struct Input
+        {
+            float3 worldPos;
+        };
+
+        // luz, nao recebe sombra
+        // para ignorar o valor de luz que o surface incorpora, fazer com que a luz retorne o valor
+        // da cor recebida ao input é o suficiente para criar um Unlit
+        fixed4 LightingUnlit(SurfaceOutput s, fixed3 lightDir, fixed atten)
+        { return fixed4(s.Albedo, s.Alpha);}
+        
+        void vert(inout appdata_base v)
+        {
+            v.vertex.x += _SinTime.x;
+        }
+
+        // surface
+        void surf (Input IN, inout SurfaceOutput o)
+        {
+            // define a cor do objecto
+            fixed4 col = fixed4(0.2,0.3,0.5,1);
+
+            // caso o valor absoluto do sinTime.a seja superior a 0.1
+			if(abs(_SinTime.a) > 0.1){
+			    clip(-1);	// o fragmento é ignorado
+            }
+
+            // cor de saida
+            o.Albedo = col;
+        }
+        ENDCG         
     }
     FallBack "Diffuse"
 }

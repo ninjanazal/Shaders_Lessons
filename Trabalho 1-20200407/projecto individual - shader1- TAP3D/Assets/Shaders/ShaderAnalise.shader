@@ -88,5 +88,52 @@
 			}
 			ENDCG
 		}
+		
+		Pass
+        {          
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+      
+            #include "UnityCG.cginc"
+			
+			// estrutura de entrada
+            struct appdata
+            {
+                float4 vertex : POSITION;	// posiçao dos vertices de entradda
+            };
+		
+			// estrutura transitoria, vertex to frag
+            struct v2f
+            {
+                float4 vertex : SV_POSITION;	// posiçao dos vertices transformado
+            };
+
+			// vertex shader	
+            v2f vert (appdata v)
+            {
+				// definiçao da estrutura de saida
+                v2f o;
+				// incrementaçao ao valor da posiçao de x o valor do seno de time/8
+				v.vertex.x +=  _SinTime.x;
+				// transformaçao das posiçoes locais para clip
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                return o;
+            }
+			// fragment
+            fixed4 frag (v2f i) : SV_Target
+            {
+				// atribuiçao da cor a este novo fragmento
+                half4 col = half4(0.2,0.3,0.5,1);
+
+				// caso o valor absoluto do sinTime.a seja superior a 0.1
+				if(abs(_SinTime.a) > 0.1){
+					clip(-1);	// o fragmento é ignorado
+				}
+                // retorna a cor do fragmento
+				return col;
+            }
+            ENDCG
+        } 
 	}
 }
