@@ -13,7 +13,7 @@
         Tags { "Queue"="Transparent" }
         Blend SrcAlpha OneMinusSrcAlpha
 
-        Cull Off Lighting Off ZWrite Off ZTest Always
+        Cull off Lighting off ZWrite off ZTest Always
 
         Pass
         {
@@ -47,7 +47,7 @@
                 float b = 2 * dot(viewDir, localCam);
                 float c = dot(localCam, localCam) - pow(sphereRadius, 2);
 
-                float d = b*b - 4*a*c;  // calculo do descriminante
+                float d = b*b - (4*a*c);  // calculo do descriminante
     
                 // caso nao exista soluçoes, nao ocorre uma iterceçao
                 if(d <= 0)
@@ -86,7 +86,8 @@
                 v2f o;
                 float4 wPos = mul(unity_ObjectToWorld, v.vertex);
                 o.pos = UnityObjectToClipPos(v.vertex);      
-                o.view = wPos.xyz - _WorldSpaceCameraPos;
+                o.view = wPos - _WorldSpaceCameraPos;
+                //o.view = WorldSpaceViewDir(v.vertex);
                 o.posProj = ComputeScreenPos(o.pos);
     
                 float inFrontof = (o.pos.z / o.pos.w) > 0;
@@ -101,7 +102,7 @@
 
                 float depth = LinearEyeDepth(UNITY_SAMPLE_DEPTH(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.posProj))));
 
-                float viewdirection = normalize(i.view);
+                float3 viewdirection = normalize(i.view);
                 float fogD = CallCulateFogIntensity(_FogCenter.xyz, _FogCenter.w, _InnerRatio, _Density, _WorldSpaceCameraPos, viewdirection,depth);
             
 
