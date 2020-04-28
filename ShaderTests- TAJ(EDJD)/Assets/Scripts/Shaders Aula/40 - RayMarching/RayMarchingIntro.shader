@@ -9,7 +9,7 @@ Shader "Aulas/RayMarchingIntro"
     }
     SubShader
     {
-        Tags { "Queue"="Transparent" }
+        Tags { "RenderType"="Opaque" }
         Blend SrcAlpha OneMinusSrcAlpha
         LOD 100
 
@@ -80,12 +80,13 @@ Shader "Aulas/RayMarchingIntro"
 
                 if(length(depthOfPixel) != 0)
                 {
-                    half nl = clamp(dot(normalize(worldPos - i.originPosition), _WorldSpaceLightPos0.xyz),0,1);
+                    half nl = clamp(dot(normalize(worldPos - i.originPosition), _WorldSpaceLightPos0.xyz),0,0.7);
                     float4 diff = nl * _LightColor0;
                     return fixed4(depthOfPixel* diff.xyz ,1) ;
                 }
                 else
                 {
+                    clip(-1);   // discarta o pixel
                     return fixed4(1,1,1,0);
                 }
             }
