@@ -103,7 +103,7 @@
                 float depth = LinearEyeDepth(UNITY_SAMPLE_DEPTH(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.posProj))));
 
                 float3 viewdirection = normalize(i.view);
-                float fogD = CallCulateFogIntensity(_FogCenter.xyz, _FogCenter.w, _InnerRatio, _Density, _WorldSpaceCameraPos, viewdirection,depth);
+                float fogD = CallCulateFogIntensity( _FogCenter.xyz, _FogCenter.w, _InnerRatio, _Density, _WorldSpaceCameraPos, viewdirection,depth);
             
 
                 col.xyz = _FogColor.xyz;
