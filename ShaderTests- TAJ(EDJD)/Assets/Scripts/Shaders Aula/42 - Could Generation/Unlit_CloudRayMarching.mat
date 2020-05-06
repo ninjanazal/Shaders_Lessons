@@ -20,11 +20,14 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Floats:
-    - _FadeDist: 0.5
+    - _FadeDist: 6.77
     - _MaxHeight: 10
-    - _MinHeight: 0
-    - _Scale: 3.42
-    - _SetScale: 14.5
-    - _Steps: 60
+    - _MinHeight: 5
+    - _Scale: 0.41
+    - _SetScale: 100
+    - _SpeedVal: 2
+    - _StepScale: 1
+    - _Steps: 335
     m_Colors:
-    - _SunDir: {r: 1, g: 0, b: 0, a: 0}
+    - _Color: {r: 0.7264151, g: 0.21586864, b: 0.21586864, a: 1}
+    - _SunDir: {r: 1, g: 2, b: 3, a: 1}
