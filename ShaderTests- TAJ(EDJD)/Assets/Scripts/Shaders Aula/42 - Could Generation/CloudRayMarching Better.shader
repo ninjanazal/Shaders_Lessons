@@ -5,8 +5,8 @@
         _Scale("Scale", Range(0.1, 10)) = 2.0
         _StepScale("Step Scale", Range(0.1, 100)) = 1
         _Steps("Steps", Range(1,500)) = 60
-        _MinHeight("_MinHeight", Range(0.0, 5)) = 0
-        _MaxHeight("_MaxHeight", Range(6, 10)) = 10.0
+        _MinHeight("_MinHeight", Range(0.0, 200)) = 0
+        _MaxHeight("_MaxHeight", Range(6, 200)) = 10.0
         _FadeDist("Fade distance", Range(0.0, 10.0)) = 0.5
         _SunDir ("Sun Direction", vector) = (1,0,0,0)
         _Color("Base Color", Color) = (1,1,1,1)
@@ -16,9 +16,8 @@
     {
         Tags { "Queue"="Transparent" }
         Blend SrcAlpha OneMinusSrcAlpha
-        Cull Off Lighting Off ZWrite Off
-        ZTest Always
-
+        Cull Off Lighting Off ZWrite On
+        ZTest LEqual 
 
         Pass
         {
@@ -70,8 +69,10 @@
         }
 
         float noise3d(float3 value)
-        {
+        {                
                 value *= _Scale;
+                value.y -= _Time.z * _SpeedVal;
+
                 float3 interp = frac(value);
                 interp = smoothstep(0.0, 1.0, interp);
                 
@@ -115,12 +116,8 @@
 
         }
 
-
-
-
-     #define MARCH(steps, noiseMap, cameraPos, viewDir, bgcol, sum, depth, t) { \
-                for (int i = 0; i < steps  + 1; i++) \
-                { \
+    #define MARCH(steps, noiseMap, cameraPos, viewDir, bgcol, sum, depth, t) { \
+            for (int i = 0; i < steps  + 1; i++){ \
                     if(t > depth) \
                         break; \
                     float3 pos = cameraPos + t * viewDir; \
@@ -139,29 +136,30 @@
                     t += max(0.1, 0.02 * t); \
                 } \
             } 
+ 
+    #define NOISEPROC(N, P) 1.75 * N * saturate((_MaxHeight - P.y)/_FadeDist)
 
+    float map1(float3 q){
+        float3 p = q;
+        float f; //é acumlação de noise
+        f = 0.5 * noise3d(q);
+        q *= 1.5f;
+        f+= 0.5 * noise3d(q);
 
-           
-           #define NOISEPROC(N, P) 1.75 * N * saturate((_MaxHeight - P.y)/_FadeDist)
-
-             float map1(float3 q){
-                float3 p = q;
-                float f; //é acumlação de noise
-                f = 0.5 * noise3d(q);
-
-                return NOISEPROC(f,p);
-            }
+        return NOISEPROC(f,p);
+    }
 
         
     
      fixed4 raymarch(float3 cameraPos, float3 viewDir, fixed4 bgcol, float depth){
                 
-              fixed4 col = fixed4(0,0,0,0);
-                float ct = 0;
+        fixed4 col = fixed4(0,0,0,0);
+        float ct = 0;
                 
-                MARCH(_Steps, map1, cameraPos, viewDir, bgcol, col, depth, ct);
-                
-                return clamp(col, 0.0, 1.0);
+        MARCH(_Steps, map1, cameraPos, viewDir, bgcol, col, depth *_Time.x, ct);
+        MARCH(_Steps, map1, cameraPos, viewDir, bgcol, col, depth * 4, ct);
+
+        return clamp(col, 0.0, 1.0);
     }
 
             v2f vert (appdata v)
@@ -169,7 +167,7 @@
                 v2f o;
                 o.wpos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 o.pos = UnityObjectToClipPos(v.vertex);
-                o.view = o.wpos - _WorldSpaceCameraPos;
+                o.view = (o.wpos - _WorldSpaceCameraPos);
                 o.projPos = ComputeScreenPos(o.pos);
                 return o;
             }

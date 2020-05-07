@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit_CloudRayMarching
-  m_Shader: {fileID: 4800000, guid: a19b390fa2e47844ba1184eb4a2fe318, type: 3}
+  m_Name: Unlit_IntegrateBetter
+  m_Shader: {fileID: 4800000, guid: 322376312728bc7498711fe2b2486b60, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -20,14 +20,13 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Floats:
-    - _FadeDist: 2.19
-    - _MaxHeight: 10
+    - _FadeDist: 10
+    - _MaxHeight: 25
     - _MinHeight: 0
-    - _Scale: 0.16
-    - _SetScale: 100
-    - _SpeedVal: 1
-    - _StepScale: 4
-    - _Steps: 470
+    - _Scale: 0.61
+    - _SpeedVal: 0.2
+    - _StepScale: 58.7
+    - _Steps: 292
     m_Colors:
-    - _Color: {r: 0.8301887, g: 0.8301887, b: 0.8301887, a: 1}
-    - _SunDir: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _SunDir: {r: -63.52, g: -61.61, b: -18.81, a: 0}
