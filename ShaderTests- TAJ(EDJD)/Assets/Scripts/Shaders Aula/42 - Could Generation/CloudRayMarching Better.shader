@@ -1,6 +1,6 @@
 ﻿Shader "Unlit/Integrate"
 {
- Properties
+    Properties
     {
         _Scale("Scale", Range(0.1, 10)) = 2.0
         _StepScale("Step Scale", Range(0.1, 100)) = 1
@@ -34,7 +34,7 @@
                 float2 uv : TEXCOORD0;
             };
 
-             struct v2f
+            struct v2f
             {
                 float4 pos : SV_POSITION;
                 float3 view : TEXCOORD0;           
@@ -42,34 +42,34 @@
                 float3 wpos : TEXCOORD2;
             };
 
-             float _Scale;
-             float _StepScale;
-             float _Steps;
-             float _MinHeight;
-             float _MaxHeight;
-             float _FadeDist;
-             float4 _SunDir;
+            float _Scale;
+            float _StepScale;
+            float _Steps;
+            float _MinHeight;
+            float _MaxHeight;
+            float _FadeDist;
+            float4 _SunDir;
             float4 _Color;
             float _SpeedVal;
 
-             //para os alunos testarem 
-             sampler2D _CameraDepthTexture;
+            //para os alunos testarem 
+            sampler2D _CameraDepthTexture;
 
-       float random(float3 value, float3 dotDir){
-            float3 smallV = sin(value); //smoth random
-            float random = dot(smallV, dotDir);
-            random =  frac(sin(random)* 165432.432122); //inventei o numero
-            return random;
-        }
+            float random(float3 value, float3 dotDir){
+                float3 smallV = sin(value); //smoth random
+                float random = dot(smallV, dotDir);
+                random =  frac(sin(random)* 165432.432122); //inventei o numero
+                return random;
+            }
 
-        float3 random3D(float3 value){
-            return float3(random(value, float3(12.777, 65.25, 39.7254 )),
-                          random(value, float3(40.777, 25.25, 39.7254 )),
-                          random(value, float3(28.777, 35.25, 90.7254 )));
-        }
+            float3 random3D(float3 value){
+                return float3(random(value, float3(12.777, 65.25, 39.7254 )),
+                random(value, float3(40.777, 25.25, 39.7254 )),
+                random(value, float3(28.777, 35.25, 90.7254 )));
+            }
 
-        float noise3d(float3 value)
-        {                
+            float noise3d(float3 value)
+            {                
                 value *= _Scale;
                 value.y -= _Time.z * _SpeedVal;
 
@@ -82,23 +82,23 @@
                     float3 YValues[2];
                     for(int y = 0; y <= 1; y++)
                     {
-                         float3 XValues[2];
-                         for(int x = 0; x <= 1; x++)
-                         {
+                        float3 XValues[2];
+                        for(int x = 0; x <= 1; x++)
+                        {
                             float3 cell = floor(value) + float3(x,y,z);
                             XValues[x] = random3D(cell);
-                         }
-                         YValues[y] = lerp(XValues[0], XValues[1], interp.x);
+                        }
+                        YValues[y] = lerp(XValues[0], XValues[1], interp.x);
                     }
                     ZValues[z] = lerp(YValues[0], YValues[1], interp.y);
                 }
                 
                 float noise = -1.0 + 2.0 * lerp(ZValues[0], ZValues[1], interp.z);
                 return noise;
-        }
+            }
 
-        fixed4 integrate(fixed4 sum, float diffuse, float density, fixed4 bgcol, float t)
-        {
+            fixed4 integrate(fixed4 sum, float diffuse, float density, fixed4 bgcol, float t)
+            {
                 //podem tentar valores
                 fixed3 lighting = fixed3(0.65, 0.68, 0.7) * 1.3 + 0.5 * fixed3(0.7,0.5,0.3) * diffuse;
                 fixed3 colrgb = lerp(fixed3(1.0,0.95,0.8), fixed3(0.65,0.65, 0.65), density);
@@ -114,12 +114,12 @@
                 return sum+col*(1.0-sum.a);
 
 
-        }
+            }
 
-    #define MARCH(steps, noiseMap, cameraPos, viewDir, bgcol, sum, depth, t) { \
-            for (int i = 0; i < steps  + 1; i++){ \
+            #define MARCH(steps, noiseMap, cameraPos, viewDir, bgcol, sum, depth, t) { \
+                for (int i = 0; i < steps  + 1; i++){ \
                     if(t > depth) \
-                        break; \
+                    break; \
                     float3 pos = cameraPos + t * viewDir; \
                     if (pos.y < _MinHeight || pos.y > _MaxHeight || sum.a > 0.99) \
                     {\
@@ -136,31 +136,31 @@
                     t += max(0.1, 0.02 * t); \
                 } \
             } 
- 
-    #define NOISEPROC(N, P) 1.75 * N * saturate((_MaxHeight - P.y)/_FadeDist)
+            
+            #define NOISEPROC(N, P) 1.75 * N * saturate((_MaxHeight - P.y)/_FadeDist)
 
-    float map1(float3 q){
-        float3 p = q;
-        float f; //é acumlação de noise
-        f = 0.5 * noise3d(q);
-        q *= 1.5f;
-        f+= 0.5 * noise3d(q);
+            float map1(float3 q){
+                float3 p = q;
+                float f; //é acumlação de noise
+                f = 0.5 * noise3d(q);
+                q *= 1.5f;
+                f+= 0.5 * noise3d(q);
 
-        return NOISEPROC(f,p);
-    }
+                return NOISEPROC(f,p);
+            }
 
-        
-    
-     fixed4 raymarch(float3 cameraPos, float3 viewDir, fixed4 bgcol, float depth){
+            
+            
+            fixed4 raymarch(float3 cameraPos, float3 viewDir, fixed4 bgcol, float depth){
                 
-        fixed4 col = fixed4(0,0,0,0);
-        float ct = 0;
+                fixed4 col = fixed4(0,0,0,0);
+                float ct = 0;
                 
-        MARCH(_Steps, map1, cameraPos, viewDir, bgcol, col, depth *_Time.x, ct);
-        MARCH(_Steps, map1, cameraPos, viewDir, bgcol, col, depth * 4, ct);
+                MARCH(_Steps, map1, cameraPos, viewDir, bgcol, col, depth *_Time.x, ct);
+                MARCH(_Steps, map1, cameraPos, viewDir, bgcol, col, depth * 4, ct);
 
-        return clamp(col, 0.0, 1.0);
-    }
+                return clamp(col, 0.0, 1.0);
+            }
 
             v2f vert (appdata v)
             {
@@ -179,7 +179,7 @@
                 fixed4 col = fixed4(1,1,1,0);
                 fixed4 clouds = raymarch( _WorldSpaceCameraPos, normalize(i.view) * _StepScale, col, depth);
                 fixed3 mixedCol = col * (1.0 - clouds.a) + clouds.rgb;
-                return fixed4(mixedCol, clouds.a) * _Color;
+                return fixed4(mixedCol, clouds.a) % _Color;
 
             }
             ENDCG

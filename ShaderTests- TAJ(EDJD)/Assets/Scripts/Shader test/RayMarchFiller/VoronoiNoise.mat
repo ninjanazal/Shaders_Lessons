@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit_IntegrateBetter
-  m_Shader: {fileID: 4800000, guid: 322376312728bc7498711fe2b2486b60, type: 3}
+  m_Name: VoronoiNoise
+  m_Shader: {fileID: 4800000, guid: 239cd35d0475f4c43991807ce9824611, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -20,13 +20,8 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Floats:
-    - _FadeDist: 10
-    - _MaxHeight: 100
-    - _MinHeight: 0
-    - _Scale: 3.03
-    - _SpeedVal: 0.2
-    - _StepScale: 22.9
-    - _Steps: 8
+    - _Amount: 0
+    - _AngleOff: 0
+    - _CellDensity: 0
     m_Colors:
-    - _Color: {r: 0.46226418, g: 0.39902994, b: 0.44992217, a: 1}
-    - _SunDir: {r: -63.52, g: -61.61, b: -18.81, a: 0}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}

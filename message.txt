@@ -1,0 +1,61 @@
+static void CustomGraphicsBlit(RenderTexture source,
+        RenderTexture dest, Material fxMaterial, int passNr)
+    {
+        //set the destination of the texture about to be 
+        //renderered, in this case the screen
+        RenderTexture.active = dest;
+
+        //get the current texture from the source
+        //in this case the screen capture before processing 
+        fxMaterial.SetTexture("_MainTex", source);
+
+        //save current graphics transformation matrices
+        //these are used to influence position, rotation and 
+        //scaling
+        //we are about to effect these matrices and want to 
+        //remember the current state
+        GL.PushMatrix();
+
+        //switch to orthographic camera projection
+        //this will basically get rid of any depth information
+        //from perspective
+        GL.LoadOrtho();
+
+        //set the pass number of the image processing
+        //a pass is basically a single draw call or single 
+        //processing of an image
+        //you can run a pass over an image multiple times
+        //think of it like you would run a blur filter over
+        //a photo once - that's 1 pass.  then you run blur
+        //again that would be pass number 2
+        fxMaterial.SetPass(passNr);
+
+        //create a quad
+        GL.Begin(GL.QUADS);
+
+        //set the UVs of vertex 1
+        GL.MultiTexCoord2(0, 0.0f, 0.0f);
+        //set the vertex position of vertex 1
+        GL.Vertex3(0.0f, 0.0f, 3.0f); // Back Left
+
+        //set the UVs of vertex 2
+        GL.MultiTexCoord2(0, 1.0f, 0.0f);
+        //set the vertex position of vertex 2
+        GL.Vertex3(1.0f, 0.0f, 2.0f); // Back Right
+
+        //etc for all vertices of the quad
+        GL.MultiTexCoord2(0, 1.0f, 1.0f);
+        GL.Vertex3(1.0f, 1.0f, 1.0f); // Top Right
+
+        GL.MultiTexCoord2(0, 0.0f, 1.0f);
+        GL.Vertex3(0.0f, 1.0f, 0.0f); // Top Left
+
+        //end the specifications of the quad
+        GL.End();
+
+        //lets remember the transformational matrix states 
+        //from when we did the PushMatrix
+        //so that this little bit of graphics doesn't impact
+        //any other drawings
+        GL.PopMatrix();
+    }
