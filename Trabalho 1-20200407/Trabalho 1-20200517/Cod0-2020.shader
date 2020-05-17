@@ -1,6 +1,6 @@
 ﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 
-Shader "Unlit/Cod1-2020"
+Shader "Unlit/Cod0-2020"
 {
     	Properties
 	{
@@ -11,6 +11,9 @@ Shader "Unlit/Cod1-2020"
 
 		[Toggle]
 		_coolElf("collElf", Range(0,1)) = 1
+
+		
+
 	}
 
 	SubShader
@@ -96,5 +99,48 @@ Shader "Unlit/Cod1-2020"
 			}
 			ENDCG
 		}
+
+				 Pass
+        {          
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+      
+            #include "UnityCG.cginc"
+
+            struct appdata
+            {
+                float4 vertex : POSITION;
+                float2 uv : TEXCOORD0;
+            };
+
+            struct v2f
+            {
+                float2 uv : TEXCOORD0;
+                float4 vertex : SV_POSITION;
+            };
+
+      
+
+            v2f vert (appdata v)
+            {
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                return o;
+            }
+
+            fixed4 frag (v2f i) : SV_Target
+            {
+
+                half4 col = half4(0.5,0,0,0.5);
+
+				 
+				if(abs(_SinTime.a) > 0.1) clip(-1);
+                
+				return col;
+            }
+            ENDCG
+        } 
+
 	}
 }
