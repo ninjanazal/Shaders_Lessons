@@ -21,12 +21,14 @@ Material:
     m_TexEnvs: []
     m_Floats:
     - _FadeDist: 10
-    - _MaxHeight: 100
+    - _MaxHeight: 49
     - _MinHeight: 0
-    - _Scale: 3.03
-    - _SpeedVal: 0.2
-    - _StepScale: 22.9
+    - _Scale: 0.35
+    - _SpeedVal: 0.62
+    - _StepScale: 23.9
     - _Steps: 8
     m_Colors:
-    - _Color: {r: 0.46226418, g: 0.39902994, b: 0.44992217, a: 1}
+    - _COlor1: {r: 1, g: 0.051886797, b: 0.051886797, a: 1}
+    - _COlor2: {r: 0.37118936, g: 1, b: 0, a: 1}
+    - _Color: {r: 1, g: 0, b: 0, a: 1}
     - _SunDir: {r: -63.52, g: -61.61, b: -18.81, a: 0}

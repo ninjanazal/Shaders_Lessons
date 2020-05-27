@@ -11,6 +11,9 @@
         _SunDir ("Sun Direction", vector) = (1,0,0,0)
         _Color("Base Color", Color) = (1,1,1,1)
         _SpeedVal("pulse speed", Float) = 2
+        _COlor1("Col", Color) = (1,1,1,1)
+        _COlor2("Col", Color) = (1,1,1,1)
+
     }
     SubShader
     {
@@ -51,6 +54,8 @@
             float4 _SunDir;
             float4 _Color;
             float _SpeedVal;
+
+            float4 _COlor1,_COlor2;
 
             //para os alunos testarem 
             sampler2D _CameraDepthTexture;
@@ -97,11 +102,12 @@
                 return noise;
             }
 
-            fixed4 integrate(fixed4 sum, float diffuse, float density, fixed4 bgcol, float t)
+            fixed4 integrate(fixed4 sum, float diffuse, float density, fixed4 bgcol, float t, float d)
             {
+                
                 //podem tentar valores
                 fixed3 lighting = fixed3(0.65, 0.68, 0.7) * 1.3 + 0.5 * fixed3(0.7,0.5,0.3) * diffuse;
-                fixed3 colrgb = lerp(fixed3(1.0,0.95,0.8), fixed3(0.65,0.65, 0.65), density);
+                fixed3 colrgb = lerp(smoothstep(_COlor1, _Color,d), smoothstep(_COlor2, _Color,d), density);
                 fixed4 col = fixed4(colrgb.r,colrgb.g, colrgb.b, density);
 
                 col.rgb *= lighting;
@@ -131,7 +137,7 @@
                     if (density > 0.01) \
                     { \
                         float diffuse = clamp((density - noiseMap(pos + 0.3 * _SunDir)) / 0.6, 0.0, 1.0);\
-                        sum = integrate(sum, diffuse, density, bgcol, t); \
+                        sum = integrate(sum, diffuse, density, bgcol, t, depth); \
                     } \
                     t += max(0.1, 0.02 * t); \
                 } \
@@ -175,11 +181,11 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 float depth = 1;
-                depth *= length(i.view);
+                depth = length(i.view);
                 fixed4 col = fixed4(1,1,1,0);
                 fixed4 clouds = raymarch( _WorldSpaceCameraPos, normalize(i.view) * _StepScale, col, depth);
                 fixed3 mixedCol = col * (1.0 - clouds.a) + clouds.rgb;
-                return fixed4(mixedCol, clouds.a) % _Color;
+                return fixed4(mixedCol, clouds.a);
 
             }
             ENDCG

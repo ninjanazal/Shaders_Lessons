@@ -34,9 +34,9 @@ Material:
     m_Floats:
     - _Glossiness: 0.5
     - _Metallic: 0
-    - _Scale: 0.2
-    - _TopVal: -0.99
-    - _Wp: 1.03
+    - _Scale: 1
+    - _TopVal: -0.6
+    - _Wp: 1.06
     m_Colors:
     - _BottomColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

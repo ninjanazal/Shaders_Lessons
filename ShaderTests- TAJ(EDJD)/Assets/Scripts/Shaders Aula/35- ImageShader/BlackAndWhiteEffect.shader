@@ -44,7 +44,9 @@
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
                 // just invert the colors
-                col.rgb = ((col.r + col.g + col.b)/3) * _Amount + (col * (1-_Amount));
+                float distFromCenter = distance(i.uv.xy, float2(0.5, 0.5));
+                col.rgb =  pow(((col.r + col.g + col.b)/3) * _Amount + (col * (1-_Amount)),2);
+                col.rgb *=  1 - distFromCenter - 0.5f;
                 return col;
             }
             ENDCG

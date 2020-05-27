@@ -27,7 +27,7 @@ Material:
     - _Glossiness: 0.5
     - _Metallic: 0
     - _activateSin: 1
-    - _range: 0.8
+    - _range: 0.774
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _base_color: {r: 0.4205693, g: 0.5943396, b: 0.33361515, a: 0.8509804}
